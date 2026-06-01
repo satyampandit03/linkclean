@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkClean | Drop the Baggage</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg-color: #05050a; --glass-bg: rgba(30, 30, 40, 0.4); --glass-border: rgba(255, 255, 255, 0.08); --text-main: #ffffff; --text-muted: #a1a1aa; --gradient-start: #ff007f; --gradient-end: #7928ca; --success: #10b981; --accent: #ff007f; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; overflow: hidden; position: relative; }
+        .ambient-glow { position: absolute; width: 500px; height: 500px; background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); border-radius: 50%; filter: blur(120px); opacity: 0.2; z-index: -1; animation: float 8s ease-in-out infinite alternate; }
+        @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(40px, -40px) scale(1.15); } }
+        .container { background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border); padding: 40px; border-radius: 24px; box-shadow: 0 30px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1); width: 100%; max-width: 600px; z-index: 1; transform: translateY(0); transition: transform 0.4s ease; }
+        .container:hover { transform: translateY(-5px); }
+        h1 { margin-bottom: 12px; font-size: 38px; font-weight: 800; letter-spacing: -1px; background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        p { color: var(--text-muted); margin-bottom: 30px; line-height: 1.6; font-size: 15px; font-weight: 400; }
+        .input-group { display: flex; flex-direction: column; gap: 16px; margin-bottom: 25px; }
+        textarea { width: 100%; height: 110px; background-color: rgba(0, 0, 0, 0.2); border: 1px solid var(--glass-border); color: var(--text-main); padding: 16px; border-radius: 12px; resize: none; font-size: 15px; transition: all 0.3s ease; }
+        textarea:focus { outline: none; border-color: var(--gradient-start); box-shadow: 0 0 0 3px rgba(255, 0, 127, 0.25); background-color: rgba(0, 0, 0, 0.4); }
+        .btn-primary { background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); color: white; border: none; padding: 14px 24px; border-radius: 12px; font-size: 16px; cursor: pointer; font-weight: 700; transition: all 0.3s ease; text-transform: uppercase; }
+        .btn-primary:hover { transform: translateY(-2px); filter: brightness(1.15); }
+        .result-container { display: none; background-color: rgba(0, 0, 0, 0.3); border: 1px solid var(--glass-border); padding: 20px; border-radius: 12px; position: relative; margin-top: 20px; }
+        .result-label { font-size: 12px; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; font-weight: 700; }
+        .result-text { padding-right: 110px; font-family: monospace; font-size: 14px; font-weight: 700; color: #e2e8f0; word-break: break-all;}
+        .clean-original { font-size: 11px; color: var(--text-muted); word-break: break-all; opacity: 0.7; margin-top: 15px;}
+        .copy-btn { position: absolute; top: 35px; right: 20px; background-color: rgba(255, 255, 255, 0.1); color: white; border: 1px solid rgba(255, 255, 255, 0.1); padding: 8px 16px; font-size: 13px; font-weight: 600; border-radius: 8px; cursor: pointer; }
+        .error-msg { color: #ff4d4d; font-size: 14px; display: none; font-weight: 600; }
+        
+        /* Loading screen styles */
+        .loading-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #05050a; display: flex; justify-content: center; align-items: center; z-index: 9999; }
+        .loading-overlay h2 { color: #ff007f; animation: pulse 1.5s infinite; font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body>
+
+    <script>
+        // 🛑 IMPORTANT: PASTE YOUR GOOGLE WEB APP URL HERE 🛑
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxVjLin7vs8AdDSCBwdv60K08-RVUbdntiJAn-aNR5qg6AxeWHW_JoobfOGb3212Q2S/exec";
+
+        // ✨ THE NEW ROUTER MAGIC ✨
+        // If someone opens this page and the URL has a #hash, instantly bounce them!
+        const currentHash = window.location.hash.substring(1);
+        if (currentHash) {
+            document.body.innerHTML = `
+                <div class="loading-overlay">
+                    <h2>Snatching your link... 💅</h2>
+                </div>
+            `;
+            // Redirect them to the Google Backend logic we built earlier
+            window.location.replace(SCRIPT_URL + "?s=" + currentHash);
+        }
+    </script>
+
+    <div class="ambient-glow"></div>
+
+    <div class="container">
+        <h1>LinkClean 💅</h1>
+        <p>Because nobody wants to look at a 400-character URL. Scrub the tracking tags and shrink it down to something iconic.</p>
+
+        <div class="input-group">
+            <textarea id="rawUrl" placeholder="Paste that tragic, bloated URL right here..."></textarea>
+            <div id="errorMsg" class="error-msg">Oh honey, no. That's not a URL.</div>
+            <button id="submitBtn" class="btn-primary" onclick="processLink()">Scrub & Shrink ✨</button>
+        </div>
+
+        <div id="resultContainer" class="result-container">
+            <div class="result-label">Your Tiny Shortlink:</div>
+            <div id="shortUrl" class="result-text"></div>
+            <button id="copyBtn" class="copy-btn" onclick="copyToClipboard()">Snatch It</button>
+            
+            <div class="clean-original" id="cleanedUrl"></div>
+        </div>
+    </div>
+
+    <script>
+        const junkParams = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'fbclid', 'gclid', 'igshid', '_ga', '_gl', 'si', 'ref', 'source'];
+        const words1 = ['spicy', 'savage', 'toxic', 'feral', 'neon', 'cosmic', 'boujee', 'iconic'];
+        const words2 = ['pink', 'glam', 'cyber', 'retro', 'disco', 'holo', 'velvet', 'plastic'];
+        const words3 = ['slay', 'icon', 'queen', 'era', 'vibe', 'aura', 'myth', 'energy'];
+
+        function generateCatchySlug() {
+            return `${words1[Math.floor(Math.random()*words1.length)]}-${words2[Math.floor(Math.random()*words2.length)]}-${words3[Math.floor(Math.random()*words3.length)]}`;
+        }
+
+        async function processLink() {
+            let rawInput = document.getElementById('rawUrl').value.trim();
+            const btn = document.getElementById('submitBtn');
+            const resultContainer = document.getElementById('resultContainer');
+            document.getElementById('errorMsg').style.display = 'none';
+
+            if (!rawInput) return;
+
+            if (!rawInput.startsWith('http://') && !rawInput.startsWith('https://')) {
+                rawInput = 'https://' + rawInput;
+            }
+
+            try {
+                const urlObj = new URL(rawInput);
+                junkParams.forEach(param => urlObj.searchParams.delete(param));
+                const cleanUrl = urlObj.toString();
+                const slug = generateCatchySlug();
+                
+                btn.innerText = "Processing... ⏳";
+                btn.disabled = true;
+
+                // Send to Google Drive
+                const targetEndpoint = `${SCRIPT_URL}?action=create&slug=${slug}&longUrl=${encodeURIComponent(cleanUrl)}`;
+                await fetch(targetEndpoint, { mode: 'no-cors' });
+
+                // ✨ THE FIX: We now generate the shortlink using YOUR website's URL, not Google's.
+                // It strips off any junk and just adds #your-3-words
+                const baseSiteUrl = window.location.href.split('#')[0].split('?')[0];
+                const clickableShortLink = baseSiteUrl + '#' + slug;
+
+                document.getElementById('shortUrl').innerText = clickableShortLink;
+                document.getElementById('cleanedUrl').innerText = "Original Cleaned: " + cleanUrl;
+                
+                resultContainer.style.display = 'block';
+                btn.innerText = "Scrub & Shrink ✨";
+                btn.disabled = false;
+
+            } catch (error) {
+                document.getElementById('errorMsg').style.display = 'block';
+                btn.innerText = "Scrub & Shrink ✨";
+                btn.disabled = false;
+            }
+        }
+
+        function copyToClipboard() {
+            const textToCopy = document.getElementById('shortUrl').innerText;
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const copyBtn = document.getElementById('copyBtn');
+                copyBtn.innerText = 'Snatched! 💅';
+                copyBtn.style.backgroundColor = 'rgba(16, 185, 129, 0.2)'; 
+                copyBtn.style.color = 'var(--success)';
+            });
+        }
+    </script>
+</body>
+</html>
