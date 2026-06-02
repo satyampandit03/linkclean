@@ -38,20 +38,33 @@
         // 🛑 IMPORTANT: PASTE YOUR GOOGLE WEB APP URL HERE 🛑
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxVjLin7vs8AdDSCBwdv60K08-RVUbdntiJAn-aNR5qg6AxeWHW_JoobfOGb3212Q2S/exec";
 
-        // ✨ THE NEW ROUTER MAGIC ✨
-        // If someone opens this page and the URL has a #hash, instantly bounce them!
+        // ✨ THE SILENT INSTANT ROUTER ✨
         const currentHash = window.location.hash.substring(1);
+        
         if (currentHash) {
+            // 1. Show the sleek loading screen so the screen isn't white
             document.body.innerHTML = `
-                <div class="loading-overlay">
-                    <h2>Snatching your link... 💅</h2>
+                <div style="background-color: #05050a; height: 100vh; width: 100vw; display: flex; justify-content: center; align-items: center; position: fixed; top: 0; left: 0; z-index: 9999;">
+                    <h2 style="color: #ff007f; font-family: 'Inter', sans-serif; animation: pulse 1.5s infinite;">Snatching your link... 💅</h2>
                 </div>
             `;
-            // Redirect them to the Google Backend logic we built earlier
-            window.location.replace(SCRIPT_URL + "?s=" + currentHash);
+
+            // 2. The secret function that catches Google's response
+            window.executeSilentJump = function(data) {
+                if (data.url) {
+                    // Instantly bounce the browser without asking permission!
+                    window.location.replace(data.url); 
+                } else {
+                    document.body.innerHTML = "<h2 style='color:white; text-align:center; margin-top:20vh; font-family: sans-serif;'>Sorry bestie, that link doesn't exist. 💅</h2>";
+                }
+            };
+
+            // 3. Make the background call to your database
+            const script = document.createElement('script');
+            script.src = `${SCRIPT_URL}?s=${currentHash}&callback=executeSilentJump`;
+            document.body.appendChild(script);
         }
     </script>
-
     <div class="ambient-glow"></div>
 
     <div class="container">
