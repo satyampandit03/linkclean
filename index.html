@@ -75,13 +75,14 @@
 
     <script>
         const junkParams = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'fbclid', 'gclid', 'igshid', '_ga', '_gl', 'si', 'ref', 'source'];
-        const words1 = ['spicy', 'savage', 'toxic', 'feral', 'neon', 'cosmic', 'boujee', 'iconic'];
-        const words2 = ['pink', 'glam', 'cyber', 'retro', 'disco', 'holo', 'velvet', 'plastic'];
-        const words3 = ['slay', 'icon', 'queen', 'era', 'vibe', 'aura', 'myth', 'energy'];
-
         function generateCatchySlug() {
-            return `${words1[Math.floor(Math.random()*words1.length)]}-${words2[Math.floor(Math.random()*words2.length)]}-${words3[Math.floor(Math.random()*words3.length)]}`;
-        }
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < 3; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+}
 
         async function processLink() {
             let rawInput = document.getElementById('rawUrl').value.trim();
