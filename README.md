@@ -1,2 +1,2 @@
 # linkclean
-it shortens the url
+"A full-stack custom URL shortener built with HTML/CSS/JS, Node.js, and MongoDB."
